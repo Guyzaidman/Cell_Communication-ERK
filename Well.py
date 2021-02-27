@@ -58,8 +58,14 @@ class Well:
         """
         all_cor = self.get_all_correlations()
         all_cor = self.divide_to_n(all_cor, n=n)
-
-        plt.bar([i/n for i in range(n)], all_cor, width=0.8 / n)
+        gap = 2/n
+        a = -1
+        ticks = []
+        for i in range(n):
+            ticks.append(a)
+            a += gap
+        # ticks = [i/n for i in range(n)]
+        plt.bar(ticks, all_cor, width=2 / n)
         plt.title(self.well_name + " - correlation distribution plot")
         plt.show()
 
