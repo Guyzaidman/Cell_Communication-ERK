@@ -39,7 +39,7 @@ def load_plate(path):
 
 def saving_pickle_obj(path, name, obj):
     """
-    general purpose function for saving an object using pickle protocol
+    save object using pickle protocol
     :param path: String, path to desired directory
     :param name: String, object name
     :param obj: Object, object to save
@@ -52,7 +52,7 @@ def saving_pickle_obj(path, name, obj):
 
 def load_pickle_obj(path, name):
     """
-    general purpose function for loading an object using pickle protocol
+    load object using pickle protocol
     :param path: String, path to desired directory
     :param name: String, object name
     :return: desired object
@@ -61,4 +61,3 @@ def load_pickle_obj(path, name):
     with open(s, 'rb') as f:
         o = pickle.load(f)
         return o
-
