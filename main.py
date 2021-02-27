@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import plate_loading as pl
 import matplotlib.image as mpimg
 from Cell import Cell
 import numpy as np
@@ -138,75 +139,63 @@ def compute_all_three(df):
 
 read_dict = load_dict_from_file()
 
-dmso_list = ["plate_1-1_40549", "plate_1-1_40550",
-             "plate_1-2_40549", "plate_1-2_40550",
-             "plate_1-3_40549", "plate_1-3_40550",
-             "plate_2-1_40549", "plate_2-1_40550",
-             "plate_2-2_40549", "plate_2-2_40550",
-             "plate_2-3_40549", "plate_2-3_40550",
-             "plate_3-1_405_49", "plate_3-1_405_50",
-             "plate_3-2_405_49", "plate_3-2_405_50",
-             "plate_3-3_405_49", "plate_3-3_405_50"]
-density = []
-sync = []
-dist_fron_uni = []
+
+
+path = r'C:\Guy\ordered_plates\treatments_plates.csv'
+t_pd = pd.read_csv(path)
+t_pd = t_pd.drop(['Unnamed: 0'], axis=1)
+
+# density = []
+sync_dmso = []
+sync_1 = []
+sync_2 = []
+sync_3 = []
+dist_fron_uni_dmso = []
+dist_fron_uni_1 = []
+dist_fron_uni_2 = []
+dist_fron_uni_3 = []
 for key in read_dict:
-    if key in dmso_list:
-       density.append(read_dict[key][0])
-       sync.append(read_dict[key][1])
-       dist_fron_uni.append(read_dict[key][2])
+    # x = t_pd['DMSO'].values
+    if key in t_pd['DMSO'].values:
+       # density.append(read_dict[key][0])
+       sync_dmso.append(read_dict[key][1])
+       dist_fron_uni_dmso.append(read_dict[key][2])
 
-# plt.scatter(density, sync, c='black')
-# plt.title("density - synchronization")
-# plt.xlabel("number of cells in well")
-# plt.ylabel("mean correlation")
-# # plt.legend()
-# plt.show()
+    elif key in t_pd['class_1'].values:
+        sync_1.append(read_dict[key][1])
+        dist_fron_uni_1.append(read_dict[key][2])
 
-plt.scatter(sync, dist_fron_uni, c='black')
-plt.title("density - dist from uniform")
-plt.xlabel("number of cells in well")
+    elif key in t_pd['class_2'].values:
+        sync_2.append(read_dict[key][1])
+        dist_fron_uni_2.append(read_dict[key][2])
+
+    elif key in t_pd['class_3'].values:
+        sync_3.append(read_dict[key][1])
+        dist_fron_uni_3.append(read_dict[key][2])
+
+
+#
+# for key in read_dict:
+#     if key not in dmso_list:
+#        density.append(read_dict[key][0])
+#        sync.append(read_dict[key][1])
+#        dist_fron_uni.append(read_dict[key][2])
+#
+#
+# plt.scatter(sync_dmso, dist_fron_uni_dmso, c='black', label='DMSO')
+plt.scatter(sync_1, dist_fron_uni_1, c='blue', label='class 1')
+# plt.scatter(sync_2, dist_fron_uni_2, c='red', label='class 2')
+# plt.scatter(sync_3, dist_fron_uni_3, c='green', label='class 3')
+plt.legend()
+plt.title("sync - dist from uniform")
+plt.xlabel("mean correlation")
 plt.ylabel("dist from uniform")
 plt.show()
 
-x = pd.Series(sync)
-y = pd.Series(dist_fron_uni)
-print(x.corr(y))
-print(pearsonr(x,y))
-
-# plt.hist(dist_fron_uni)
-#
-# plt.scatter(density[:17], sync[:17], c='black', label="dmso")
-# plt.scatter(density[17:60], sync[17:60], c='r', label="class 1")
-# plt.scatter(density[60:71], sync[60:71], c='g', label="class 2")
-# plt.scatter(density[71:], sync[71:], c='b', label="class 3")
-#
-# plt.title("density - synchronization")
-# plt.xlabel("number of cells in well")
-# plt.ylabel("mean correlation")
-# plt.legend()
-# plt.show()
-
-
-# plt.scatter(density[:17], dist_fron_uni[:17], c='black',label="dmso")
-# plt.scatter(density[17:60], dist_fron_uni[17:60], c='r', label="class 1")
-# plt.scatter(density[60:71], dist_fron_uni[60:71], c='g', label="class 2")
-# plt.scatter(density[71:], dist_fron_uni[71:], c='b', label="class 3")
-#
-# plt.title("density - distance from uniform")
-# plt.xlabel("number of cells in well")
-# plt.ylabel("dist from uniform")
-# plt.legend()
-# plt.show()
-
-
-# plt.scatter(sync[:17], dist_fron_uni[:17], c='black',label="dmso")
-# plt.scatter(sync[17:60], dist_fron_uni[17:60], c='r', label="class 1")
-# plt.scatter(sync[60:71], dist_fron_uni[60:71], c='g', label="class 2")
-# plt.scatter(sync[71:], dist_fron_uni[71:], c='b', label="class 3")
-#
-# plt.title("sync - dist from uniform")
-# plt.xlabel("sync")
-# plt.ylabel("dist from uniform")
-# plt.legend()
-# plt.show()
+p = r'C:\Guy\ordered_plates'
+wells = [r'Plate 1.3\40532', r'Plate 2.1\40520',
+         r'Plate 2.2\40539', r'Plate 3.1\40506',
+         r'Plate 2.1\40542']
+for well in tqdm(wells):
+    w = pl.load_well(os.path.join(p, well))
+    w.plot_correlation_distribution(20)

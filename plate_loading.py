@@ -37,7 +37,20 @@ def load_plate(path):
     return wells
 
 
-def saving_pickle_obj(path, name, obj):
+def load_all_plates(path):
+    plates = {}
+    for root, directories, filenames in os.walk(path):
+        for d in directories:
+            try:
+                plates[d] = load_plate(os.path.join(path, d))
+            except:
+                pass
+        break
+
+    return plates
+
+
+def save_pickle_obj(path, name, obj):
     """
     save object using pickle protocol
     :param path: String, path to desired directory
@@ -61,3 +74,8 @@ def load_pickle_obj(path, name):
     with open(s, 'rb') as f:
         o = pickle.load(f)
         return o
+
+
+p = 'enter path'
+plates = load_all_plates(p)
+save_pickle_obj(p, 'plates_dict', plates)
