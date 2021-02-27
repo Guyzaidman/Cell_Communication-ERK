@@ -6,7 +6,7 @@ from Cell import Cell
 
 class Well:
     """
-    Well class consisting from:
+    Well class consisting of:
     well_name: String, a unique identifier (optional)
     cells: list, consists of all cells in well
     """

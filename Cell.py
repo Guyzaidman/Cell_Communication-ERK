@@ -4,7 +4,7 @@ from scipy.stats import pearsonr
 
 class Cell:
     """
-    Cell class consisting from:
+    Cell class consisting of:
     id: String, a unique identifier (optional)
     x: pandas.Series of the x coordinates of the cell
     y: pandas.Series of the y coordinates of the cell
