@@ -1,7 +1,11 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from Cell import Cell
+from scipy.spatial import Delaunay, Voronoi, voronoi_plot_2d
+import networkx as nx
+from tqdm import tqdm
 
 
 class Well:
@@ -37,6 +41,35 @@ class Well:
         plt.scatter(x, y)
         plt.show()
 
+    def plot_delaunay(self):
+        """
+        plot the Delaunay graph of the well using scipy.spatial.Delaunay:
+        https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.Delaunay.html
+        :return: None
+        """
+        points = np.array([c.get_cell_position(frame=0) for c in self.cells])
+        tri = Delaunay(points)
+        plt.triplot(points[:, 0], points[:, 1], tri.simplices)
+        plt.plot(points[:, 0], points[:, 1], 'o')
+        plt.title(self.well_name)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.show()
+
+    def plot_voronoi(self):
+        """
+        plot the Voronoi graph of the well using scipy.spatial.Voronoi:
+        https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.Voronoi.html
+        :return: None
+        """
+        points = np.array([c.get_cell_position(frame=0) for c in self.cells])
+        vor = Voronoi(points)
+        fig = voronoi_plot_2d(vor)
+        plt.title(self.well_name)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.show()
+
     def get_all_correlations(self):
         """
         calculates pearson correlation between every pair of cells in well
@@ -67,6 +100,7 @@ class Well:
         t = np.append(t, 1)
         plt.xticks(t, rotation=45)
         plt.title(self.well_name + " - correlation distribution plot")
+
         plt.show()
 
     def divide_to_n(self, cor_arr, n):
@@ -88,3 +122,15 @@ class Well:
         res = res / l
 
         return res
+
+    def calc_mean_time_series(self):
+        m = []
+        for t in range(self.cells[0].number_of_frames):
+            mean_ktr = 0
+            for cell in self.cells:
+                mean_ktr += cell.ktr[t]
+
+            m.append(mean_ktr/len(self.cells))
+
+        name = self.well_name.split(" ")[1]
+        return pd.Series(m, name=name)

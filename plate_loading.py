@@ -3,6 +3,10 @@ import pandas as pd
 from tqdm import tqdm
 from Well import Well
 import pickle
+from scipy.spatial import distance
+import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+from statistics import mean
 
 
 def load_well(path):
@@ -17,6 +21,7 @@ def load_well(path):
         y_df = pd.read_excel(os.path.join(path, "y.xlsx"), header=None)
 
         name = path.split('\\')[-2:]
+        name[0] = name[0].replace(' ', '_').replace('.', '-').lower()
         name = name[0] + "_" + name[1]
 
         return Well(ktr_df, x_df, y_df, name)
@@ -76,6 +81,23 @@ def load_pickle_obj(path, name):
         return o
 
 
-p = 'enter path'
-plates = load_all_plates(p)
-save_pickle_obj(p, 'plates_dict', plates)
+# p = r'C:\Guy\ordered_plates'
+# plate = load_pickle_obj(p, 'Plate 1.1')
+#
+# for well in range(50):
+#     w = plate[well]
+#     s = pd.Series()
+#     for i in range(121):
+#         summ = 0
+#         for c in w.cells:
+#             summ += c.ktr[i]
+#
+#         s._set_value(i,summ/len(w.cells))
+#
+#     s.plot()
+#     plt.title(w.well_name)
+#     plt.show()
+
+
+
+

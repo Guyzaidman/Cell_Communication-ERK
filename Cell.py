@@ -32,6 +32,8 @@ class Cell:
         """
         self.ktr.plot()
         plt.title("cell " + str(self.id))
+        plt.xlabel("t")
+        plt.ylabel("ktr intensity")
         plt.show()
 
     def get_cell_position(self, frame):
